@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +39,7 @@ public class FollowUpRepository {
         jdbc.update(con -> {
             PreparedStatement ps = con.prepareStatement(
                 "INSERT INTO follow_up (customer_id, admin_id, planned_date, type, status, notes) VALUES (?, ?, ?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS);
+                new String[]{"id"});
             ps.setLong(1, f.getCustomerId());
             ps.setLong(2, f.getAdminId());
             ps.setDate(3, Date.valueOf(f.getPlannedDate()));

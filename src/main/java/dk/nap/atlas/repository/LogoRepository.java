@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.Optional;
 
@@ -37,7 +36,7 @@ public class LogoRepository {
         jdbc.update(con -> {
             PreparedStatement ps = con.prepareStatement(
                 "INSERT INTO logo (customer_id, filename, file_path, file_size_bytes, mime_type) VALUES (?, ?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS);
+                new String[]{"id"});
             if (l.getCustomerId() == null) ps.setNull(1, Types.BIGINT); else ps.setLong(1, l.getCustomerId());
             ps.setString(2, l.getFilename());
             ps.setString(3, l.getFilePath());

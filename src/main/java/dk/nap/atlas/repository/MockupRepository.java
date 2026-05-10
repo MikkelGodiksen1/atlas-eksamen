@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.Optional;
 
@@ -37,7 +36,7 @@ public class MockupRepository {
         jdbc.update(con -> {
             PreparedStatement ps = con.prepareStatement(
                 "INSERT INTO mockup (customer_id, product_id, logo_id, file_path, selected_specifications) VALUES (?, ?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS);
+                new String[]{"id"});
             if (m.getCustomerId() == null) ps.setNull(1, Types.BIGINT); else ps.setLong(1, m.getCustomerId());
             ps.setLong(2, m.getProductId());
             ps.setLong(3, m.getLogoId());

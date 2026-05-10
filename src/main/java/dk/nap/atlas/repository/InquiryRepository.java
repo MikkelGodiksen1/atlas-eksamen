@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +40,7 @@ public class InquiryRepository {
         jdbc.update(con -> {
             PreparedStatement ps = con.prepareStatement(
                 "INSERT INTO inquiry (customer_id, mockup_id, inquiry_type, quantity, total_price, status, notes) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS);
+                new String[]{"id"});
             ps.setLong(1, inq.getCustomerId());
             if (inq.getMockupId() == null) ps.setNull(2, Types.BIGINT); else ps.setLong(2, inq.getMockupId());
             ps.setString(3, inq.getInquiryType() == null ? "designer" : inq.getInquiryType());
