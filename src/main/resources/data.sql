@@ -1,7 +1,7 @@
--- Seed-data: én admin (default password 'admin123' — skift via ADMIN_DEFAULT_PASSWORD i prod)
--- BCrypt hash af 'admin123' (cost 12). Genereret en gang via BCryptPasswordEncoder.
+-- Seed-data: én admin (default password 'admin123' — skift i prod)
+-- BCrypt hash af 'admin123' (cost 12). Genereret via Spring Security BCryptPasswordEncoder.
 INSERT INTO admin (name, email, password_hash, role) VALUES
-    ('Admin', 'admin@nap.dk', '$2a$12$5xZqM3J9b6.J0a3I5X1l1u8g.hZBcYvN2g1V0o9o4qP7m3Yc7iJC2', 'admin');
+    ('Admin', 'admin@nap.dk', '$2a$12$vBioEO47MRzoPIJdOcwYTej9C.3nw1qaSt7JXyApdX55GivBylDF6', 'admin');
 
 -- Tre produkttyper
 INSERT INTO product (name, type, base_price, description) VALUES
