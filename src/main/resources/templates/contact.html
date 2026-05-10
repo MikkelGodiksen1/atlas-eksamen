@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bliv kontaktet — NAP')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <h1>Bliv kontaktet</h1>
+    <p class="lead">Hvis du foretrækker at få direkte rådgivning, så udfyld nedenstående og vi ringer dig op.</p>
+
+    <form th:action="@{/contact/submit}" method="post" th:object="${inquiryForm}" class="contact-form">
+        <label>Virksomhedsnavn
+            <input type="text" th:field="*{companyName}" required>
+            <span class="error" th:errors="*{companyName}"></span>
+        </label>
+
+        <label>CVR (8 cifre)
+            <input type="text" th:field="*{cvr}" pattern="\d{8}" required>
+            <span class="error" th:errors="*{cvr}"></span>
+        </label>
+
+        <label>Kontaktperson
+            <input type="text" th:field="*{contactPerson}" required>
+        </label>
+
+        <label>Email
+            <input type="email" th:field="*{email}" required>
+        </label>
+
+        <label>Telefon
+            <input type="tel" th:field="*{phone}" required>
+        </label>
+
+        <label>Foretrukken opkalds-tid (valgfri)
+            <input type="text" th:field="*{preferredCallTime}" placeholder="fx mandag-fredag kl. 9-12">
+        </label>
+
+        <label>Besked
+            <textarea th:field="*{message}" rows="4"></textarea>
+        </label>
+
+        <input type="hidden" th:field="*{quantity}" value="1">
+
+        <button type="submit" class="btn btn-primary">Send anmodning</button>
+    </form>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

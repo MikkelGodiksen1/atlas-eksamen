@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Opret kunde — NAP Admin')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container admin-main">
+    <h1>Opret kunde</h1>
+    <a th:href="@{/admin/customers}" class="btn">← Tilbage</a>
+
+    <form th:action="@{/admin/customers/create}" method="post" th:object="${customerForm}" class="admin-form">
+        <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+        <label>Virksomhedsnavn
+            <input type="text" th:field="*{companyName}" required>
+            <span class="error" th:errors="*{companyName}"></span>
+        </label>
+        <label>CVR (8 cifre)
+            <input type="text" th:field="*{cvr}" pattern="\d{8}" required>
+            <span class="error" th:errors="*{cvr}"></span>
+        </label>
+        <label>Kontaktperson
+            <input type="text" th:field="*{contactPerson}" required>
+            <span class="error" th:errors="*{contactPerson}"></span>
+        </label>
+        <label>Email
+            <input type="email" th:field="*{email}" required>
+            <span class="error" th:errors="*{email}"></span>
+        </label>
+        <label>Telefon
+            <input type="tel" th:field="*{phone}" required>
+            <span class="error" th:errors="*{phone}"></span>
+        </label>
+        <label>Adresse (valgfri)
+            <input type="text" th:field="*{address}">
+        </label>
+        <button type="submit" class="btn btn-primary">Opret kunde</button>
+    </form>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

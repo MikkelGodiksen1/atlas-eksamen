@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Fejl — NAP')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main class="container">
+    <h1>Der opstod en fejl</h1>
+    <p th:text="${errorMessage} ?: 'Noget gik galt. Prøv igen om lidt.'"></p>
+    <a th:href="@{/}" class="btn">Til forsiden</a>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,38 @@
+name: Atlas CI
+
+on:
+  pull_request:
+    paths:
+      - 'Pensum/ATLAS/atlas-app/**'
+      - '.github/workflows/ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'Pensum/ATLAS/atlas-app/**'
+
+defaults:
+  run:
+    working-directory: Pensum/ATLAS/atlas-app
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build and test
+        run: mvn -B clean verify
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-report
+          path: Pensum/ATLAS/atlas-app/target/surefire-reports/

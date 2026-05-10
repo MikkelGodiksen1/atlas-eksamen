@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: atlas
+      POSTGRES_USER: atlas
+      POSTGRES_PASSWORD: atlas_dev
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atlas"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      DATABASE_URL: jdbc:postgresql://postgres:5432/atlas
+      DATABASE_USER: atlas
+      DATABASE_PASSWORD: atlas_dev
+      ATLAS_SAMPLES_DIR: /app/sample-bags
+    volumes:
+      - ./uploads:/app/uploads
+      - ../Billeder:/app/sample-bags:ro
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres-data:

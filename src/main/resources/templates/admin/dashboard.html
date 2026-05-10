@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Admin dashboard — NAP')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container admin-main">
+    <h1>Dashboard</h1>
+    <p class="lead">Velkommen, <span sec:authentication="name">admin</span>.</p>
+
+    <div th:if="${flashMessage}" class="alert alert-success" th:text="${flashMessage}"></div>
+    <div th:if="${flashError}" class="alert alert-error" th:text="${flashError}"></div>
+
+    <div class="admin-widgets">
+        <div class="widget" th:classappend="${overdue.size() > 0 ? 'widget-warning' : ''}">
+            <h2>Forsinkede opfølgninger</h2>
+            <p class="big-number" th:text="${overdue.size()}">0</p>
+            <ul>
+                <li th:each="f : ${overdue}">
+                    <a th:href="@{|/admin/customers/${f.customerId}|}"
+                       th:text="${f.plannedDate + ' — ' + f.type}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="widget">
+            <h2>Dagens opfølgninger</h2>
+            <p class="big-number" th:text="${today.size()}">0</p>
+            <ul>
+                <li th:each="f : ${today}">
+                    <a th:href="@{|/admin/customers/${f.customerId}|}" th:text="${f.type + ' kl ?'}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="widget">
+            <h2>Forespørgsler i alt</h2>
+            <p class="big-number" th:text="${totalInquiries}">0</p>
+            <a th:href="@{/admin/inquiries}">Se alle</a>
+        </div>
+    </div>
+
+    <h2>Seneste forespørgsler</h2>
+    <table class="data-table">
+        <thead>
+        <tr><th>ID</th><th>Type</th><th>Antal</th><th>Pris</th><th>Status</th><th>Modtaget</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="i : ${recentInquiries}">
+            <td><a th:href="@{|/admin/inquiries/${i.id}|}" th:text="${'#' + i.id}"></a></td>
+            <td th:text="${i.inquiryType}"></td>
+            <td th:text="${i.quantity ?: '—'}"></td>
+            <td th:text="${i.totalPrice != null ? i.totalPrice + ' kr' : '—'}"></td>
+            <td><span class="badge" th:classappend="${'badge-' + i.status}" th:text="${i.status}"></span></td>
+            <td th:text="${i.createdAt != null ? #temporals.format(i.createdAt, 'dd-MM-yyyy HH:mm') : ''}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p class="admin-actions">
+        <a th:href="@{/admin/customers}" class="btn">Kunder</a>
+        <a th:href="@{/admin/inquiries}" class="btn">Forespørgsler</a>
+        <a th:href="@{/admin/customers/new}" class="btn btn-primary">+ Ny kunde</a>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="submit" class="btn">Log ud</button>
+        </form>
+    </p>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

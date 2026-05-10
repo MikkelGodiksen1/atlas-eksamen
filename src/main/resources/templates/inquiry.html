@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Afgiv forespørgsel — NAP')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container inquiry-main">
+    <h1>Afgiv forespørgsel</h1>
+
+    <div class="inquiry-grid">
+        <aside class="inquiry-summary">
+            <h2>Din mockup</h2>
+            <img th:if="${mockup != null}" th:src="@{|/designer/mockup/${mockup.id}/image|}" alt="Mockup">
+
+            <h3>Pris</h3>
+            <table class="price-table">
+                <tr><td>Antal</td><td th:text="${quantity + ' stk'}"></td></tr>
+                <tr><td>Enhedspris</td><td th:text="${priceResult.unitPriceBeforeDiscount + ' kr'}"></td></tr>
+                <tr><td>Volume-rabat</td><td th:text="${(1 - priceResult.tierFactor.doubleValue()) * 100 + ' %'}"></td></tr>
+                <tr><td>Pris efter rabat</td><td th:text="${priceResult.unitPriceAfterDiscount + ' kr/stk'}"></td></tr>
+                <tr class="total"><td><strong>Total</strong></td><td><strong th:text="${priceResult.totalPrice + ' kr'}"></strong></td></tr>
+            </table>
+            <p class="note">Alle priser er ekskl. moms.</p>
+        </aside>
+
+        <section class="inquiry-form-section">
+            <h2>Dine oplysninger</h2>
+            <form th:action="@{/inquiry/submit}" method="post" th:object="${inquiryForm}">
+                <input type="hidden" name="mockupId" th:value="${mockup?.id}">
+                <input type="hidden" name="productId" th:value="${productId}">
+                <input type="hidden" th:each="sid : ${specIds}" name="specIds" th:value="${sid}">
+                <input type="hidden" th:field="*{quantity}">
+
+                <label>Virksomhedsnavn
+                    <input type="text" th:field="*{companyName}" required>
+                    <span class="error" th:errors="*{companyName}"></span>
+                </label>
+
+                <label>CVR (8 cifre)
+                    <input type="text" th:field="*{cvr}" pattern="\d{8}" required>
+                    <span class="error" th:errors="*{cvr}"></span>
+                </label>
+
+                <label>Kontaktperson
+                    <input type="text" th:field="*{contactPerson}" required>
+                    <span class="error" th:errors="*{contactPerson}"></span>
+                </label>
+
+                <label>Email
+                    <input type="email" th:field="*{email}" required>
+                    <span class="error" th:errors="*{email}"></span>
+                </label>
+
+                <label>Telefon
+                    <input type="tel" th:field="*{phone}" required>
+                    <span class="error" th:errors="*{phone}"></span>
+                </label>
+
+                <label>Adresse (valgfri)
+                    <input type="text" th:field="*{address}">
+                </label>
+
+                <label>Besked til NAP (valgfri)
+                    <textarea th:field="*{message}" rows="4"></textarea>
+                </label>
+
+                <button type="submit" class="btn btn-primary">Send forespørgsel</button>
+            </form>
+        </section>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

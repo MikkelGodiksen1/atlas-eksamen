@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Kunder — NAP Admin')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container admin-main">
+    <h1>Kunder</h1>
+    <p>
+        <a th:href="@{/admin}" class="btn">← Dashboard</a>
+        <a th:href="@{/admin/customers/new}" class="btn btn-primary">+ Opret kunde</a>
+    </p>
+    <div th:if="${flashMessage}" class="alert alert-success" th:text="${flashMessage}"></div>
+
+    <table class="data-table">
+        <thead>
+        <tr><th>Virksomhed</th><th>CVR</th><th>Kontaktperson</th><th>Email</th><th>Telefon</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${customers}">
+            <td><a th:href="@{|/admin/customers/${c.id}|}" th:text="${c.companyName}"></a></td>
+            <td th:text="${c.cvr}"></td>
+            <td th:text="${c.contactPerson}"></td>
+            <td th:text="${c.email}"></td>
+            <td th:text="${c.phone}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${customers.empty}" class="empty">Ingen kunder registreret endnu.</p>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

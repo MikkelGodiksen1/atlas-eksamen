@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forespørgsler — NAP Admin')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container admin-main">
+    <a th:href="@{/admin}" class="btn">← Dashboard</a>
+    <h1>Forespørgsler</h1>
+    <table class="data-table">
+        <thead>
+        <tr><th>ID</th><th>Type</th><th>Antal</th><th>Pris</th><th>Status</th><th>Modtaget</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="i : ${inquiries}">
+            <td><a th:href="@{|/admin/inquiries/${i.id}|}" th:text="${'#' + i.id}"></a></td>
+            <td th:text="${i.inquiryType}"></td>
+            <td th:text="${i.quantity ?: '—'}"></td>
+            <td th:text="${i.totalPrice != null ? i.totalPrice + ' kr' : '—'}"></td>
+            <td><span class="badge" th:classappend="${'badge-' + i.status}" th:text="${i.status}"></span></td>
+            <td th:text="${i.createdAt != null ? #temporals.format(i.createdAt, 'dd-MM-yyyy HH:mm') : ''}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${inquiries.empty}" class="empty">Ingen forespørgsler endnu.</p>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

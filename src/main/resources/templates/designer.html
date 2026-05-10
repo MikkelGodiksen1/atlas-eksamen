@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Designer — NAP')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container designer-main">
+    <h1>Designer</h1>
+    <p class="lead">Upload dit logo, vælg posetype og specifikationer, og se en realistisk mockup af din egen pose.</p>
+
+    <div class="designer-grid">
+        <section class="designer-panel">
+            <h2>1. Upload logo</h2>
+            <div th:if="${uploadError}" class="alert alert-error" th:text="${uploadError}"></div>
+
+            <form th:action="@{/designer/upload-logo}" method="post" enctype="multipart/form-data" class="upload-form">
+                <label for="logo-input" class="upload-drop">
+                    <input id="logo-input" type="file" name="logo" accept="image/png,image/jpeg,image/svg+xml" required>
+                    <span>Træk en fil ind eller klik for at vælge<br>(PNG, JPG eller SVG, max 5 MB)</span>
+                </label>
+                <button type="submit" class="btn btn-primary">Upload logo</button>
+            </form>
+
+            <div th:if="${logoId != null}" class="logo-uploaded">
+                <p>✓ Logo uploadet (id: <span th:text="${logoId}">42</span>)</p>
+            </div>
+        </section>
+
+        <section class="designer-panel">
+            <h2>2. Vælg pose</h2>
+            <form th:action="@{/designer/generate-mockup}" method="post" id="generate-form">
+                <input type="hidden" name="logoId" th:value="${logoId}" required>
+
+                <label>Produkttype</label>
+                <select name="productId" required onchange="this.form.action='/designer'; this.form.method='get'; this.form.submit();">
+                    <option th:each="p : ${products}"
+                            th:value="${p.id}"
+                            th:text="${p.name + ' — fra ' + p.basePrice + ' kr/stk'}"
+                            th:selected="${p.id == selectedProductId}"></option>
+                </select>
+
+                <div th:if="${specsByCategory != null}" class="specs">
+                    <div th:each="entry : ${specsByCategory}" class="spec-group">
+                        <label th:text="${entry.key == 'material' ? 'Materiale' : (entry.key == 'color' ? 'Farve' : 'Størrelse')}">Materiale</label>
+                        <select th:name="specIds">
+                            <option th:each="s : ${entry.value}"
+                                    th:value="${s.id}"
+                                    th:text="${s.value + (s.priceFactor.compareTo(new java.math.BigDecimal('1.000')) == 0 ? '' : ' (×' + s.priceFactor + ')')}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary"
+                        th:disabled="${logoId == null}">
+                    Generér realistisk mockup
+                </button>
+            </form>
+        </section>
+
+        <section class="designer-panel mockup-result">
+            <h2>3. Din mockup</h2>
+            <div th:if="${mockup != null}" class="mockup-display">
+                <img th:src="@{|/designer/mockup/${mockup.id}/image|}" alt="Mockup">
+                <div class="mockup-actions">
+                    <a th:href="@{|/designer/mockup/${mockup.id}/download|}" class="btn">Download som PNG</a>
+                    <a th:href="@{|/inquiry?mockupId=${mockup.id}&productId=${selectedProductId}&quantity=100|}"
+                       class="btn btn-primary">Afgiv forespørgsel</a>
+                </div>
+            </div>
+            <div th:if="${mockup == null}" class="mockup-placeholder">
+                <p>Når du har uploadet et logo og valgt specifikationer, vises mockup'en her.</p>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

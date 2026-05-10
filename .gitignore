@@ -1,0 +1,13 @@
+target/
+build/
+*.class
+*.jar
+.idea/
+.vscode/
+*.iml
+.DS_Store
+uploads/
+postgres-data/
+.env
+.env.local
+application-local.properties.bak

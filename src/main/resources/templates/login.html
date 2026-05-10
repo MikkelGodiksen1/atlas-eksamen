@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Login — NAP Admin')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container login-main">
+    <div class="login-box">
+        <h1>Admin login</h1>
+        <div th:if="${loginError}" class="alert alert-error" th:text="${loginError}"></div>
+        <form th:action="@{/login}" method="post">
+            <label>Email <input type="email" name="email" required autofocus></label>
+            <label>Adgangskode <input type="password" name="password" required></label>
+            <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="submit" class="btn btn-primary">Log ind</button>
+        </form>
+        <p class="hint">Default seed-konto: <code>admin@nap.dk</code> / <code>admin123</code></p>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

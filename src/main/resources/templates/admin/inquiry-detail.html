@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forespørgsel — NAP Admin')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container admin-main">
+    <a th:href="@{/admin/inquiries}" class="btn">← Forespørgsler</a>
+    <h1 th:text="${'Forespørgsel #' + inquiry.id}"></h1>
+
+    <div th:if="${flashMessage}" class="alert alert-success" th:text="${flashMessage}"></div>
+    <div th:if="${flashError}" class="alert alert-error" th:text="${flashError}"></div>
+
+    <div class="inquiry-detail-grid">
+        <section>
+            <h2>Mockup</h2>
+            <img th:if="${mockup}" th:src="@{|/designer/mockup/${mockup.id}/image|}" alt="Mockup">
+            <p th:if="${mockup == null}" class="empty">Ingen mockup tilknyttet (direkte kontakt).</p>
+        </section>
+
+        <section>
+            <h2>Detaljer</h2>
+            <table class="data-table">
+                <tr><th>Type</th><td th:text="${inquiry.inquiryType}"></td></tr>
+                <tr><th>Antal</th><td th:text="${inquiry.quantity ?: '—'}"></td></tr>
+                <tr><th>Pris</th><td th:text="${inquiry.totalPrice != null ? inquiry.totalPrice + ' kr' : '—'}"></td></tr>
+                <tr><th>Status</th><td><span class="badge" th:classappend="${'badge-' + inquiry.status}" th:text="${inquiry.status}"></span></td></tr>
+                <tr><th>Modtaget</th><td th:text="${inquiry.createdAt != null ? #temporals.format(inquiry.createdAt, 'dd-MM-yyyy HH:mm') : ''}"></td></tr>
+                <tr th:if="${mockup}"><th>Specifikationer</th><td th:text="${mockup.selectedSpecifications}"></td></tr>
+                <tr><th>Besked</th><td th:text="${inquiry.notes}" style="white-space: pre-line"></td></tr>
+            </table>
+
+            <h3>Kunde</h3>
+            <p th:if="${customer}">
+                <strong th:text="${customer.companyName}"></strong> (CVR <span th:text="${customer.cvr}"></span>)<br>
+                <span th:text="${customer.contactPerson}"></span> ·
+                <a th:href="|mailto:${customer.email}|" th:text="${customer.email}"></a> ·
+                <span th:text="${customer.phone}"></span>
+                <br>
+                <a th:href="@{|/admin/customers/${customer.id}|}" class="btn">Åbn kunde</a>
+            </p>
+
+            <h3>Skift status</h3>
+            <form th:action="@{|/admin/inquiries/${inquiry.id}/status|}" method="post">
+                <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <select name="newStatus">
+                    <option value="in_progress">in_progress</option>
+                    <option value="answered">answered</option>
+                    <option value="won">won</option>
+                    <option value="lost">lost</option>
+                    <option value="closed">closed</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Opdater</button>
+            </form>
+        </section>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

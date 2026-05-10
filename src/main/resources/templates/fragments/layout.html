@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} ?: 'Nordic Atlas Packaging'">Nordic Atlas Packaging</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:fragment="header" class="site-header">
+    <div class="container header-inner">
+        <a th:href="@{/designer}" class="brand">
+            <strong>Nordic Atlas Packaging</strong>
+            <span class="tagline">Design dine egne tekstilposer</span>
+        </a>
+        <nav class="nav">
+            <a th:href="@{/designer}">Designer</a>
+            <a th:href="@{/contact}">Bliv kontaktet</a>
+            <a th:href="@{/admin}" class="nav-admin">Admin</a>
+        </nav>
+    </div>
+</header>
+
+<footer th:fragment="footer" class="site-footer">
+    <div class="container">
+        <p>&copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span> Nordic Atlas Packaging — fag-projekt for Systemudvikling 2. semester</p>
+    </div>
+</footer>
+</body>
+</html>

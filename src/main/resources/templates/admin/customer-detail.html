@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Kundedetalje — NAP Admin')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container admin-main">
+    <a th:href="@{/admin/customers}" class="btn">← Kundeliste</a>
+    <h1 th:text="${customer.companyName}"></h1>
+    <p>CVR: <span th:text="${customer.cvr}"></span></p>
+    <p>Kontaktperson: <span th:text="${customer.contactPerson}"></span></p>
+    <p>Email: <a th:href="|mailto:${customer.email}|" th:text="${customer.email}"></a></p>
+    <p>Telefon: <span th:text="${customer.phone}"></span></p>
+    <p th:if="${customer.address}">Adresse: <span th:text="${customer.address}"></span></p>
+
+    <div th:if="${flashMessage}" class="alert alert-success" th:text="${flashMessage}"></div>
+    <div th:if="${flashError}" class="alert alert-error" th:text="${flashError}"></div>
+
+    <h2>Forespørgsler</h2>
+    <table class="data-table">
+        <thead><tr><th>ID</th><th>Type</th><th>Antal</th><th>Pris</th><th>Status</th><th>Modtaget</th></tr></thead>
+        <tbody>
+        <tr th:each="i : ${inquiries}">
+            <td><a th:href="@{|/admin/inquiries/${i.id}|}" th:text="${'#' + i.id}"></a></td>
+            <td th:text="${i.inquiryType}"></td>
+            <td th:text="${i.quantity ?: '—'}"></td>
+            <td th:text="${i.totalPrice != null ? i.totalPrice + ' kr' : '—'}"></td>
+            <td th:text="${i.status}"></td>
+            <td th:text="${i.createdAt != null ? #temporals.format(i.createdAt, 'dd-MM-yyyy') : ''}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${inquiries.empty}" class="empty">Ingen forespørgsler endnu.</p>
+
+    <h2>Opfølgninger</h2>
+    <table class="data-table">
+        <thead><tr><th>Plandato</th><th>Type</th><th>Status</th><th>Note</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="f : ${followUps}" th:classappend="${f.overdue ? 'row-overdue' : ''}">
+            <td th:text="${f.plannedDate}"></td>
+            <td th:text="${f.type}"></td>
+            <td>
+                <span th:text="${f.status}"></span>
+                <span th:if="${f.overdue}" class="badge badge-overdue">Forsinket</span>
+                <span th:if="${f.today}" class="badge badge-today">I dag</span>
+            </td>
+            <td th:text="${f.notes}"></td>
+            <td>
+                <form th:if="${f.status == 'planned'}"
+                      th:action="@{|/admin/follow-ups/${f.id}/complete|}" method="post" style="display:inline">
+                    <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <input type="hidden" name="customerId" th:value="${customer.id}">
+                    <input type="text" name="outcomeNote" placeholder="Udfald (kort)" required>
+                    <button type="submit" class="btn">Markér udført</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Planlæg ny opfølgning</h3>
+    <form th:action="@{/admin/follow-ups}" method="post" class="admin-form follow-up-form">
+        <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input type="hidden" name="customerId" th:value="${customer.id}">
+        <label>Dato <input type="date" name="plannedDate" required></label>
+        <label>Type
+            <select name="type" required>
+                <option value="opkald">Telefonopkald</option>
+                <option value="email">Email</option>
+                <option value="møde">Møde</option>
+            </select>
+        </label>
+        <label>Note <input type="text" name="notes"></label>
+        <button type="submit" class="btn btn-primary">Planlæg opfølgning</button>
+    </form>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Tak for din forespørgsel')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <div class="confirmation">
+        <h1>✓ Tak for din forespørgsel</h1>
+        <p class="lead">Vi har modtaget din forespørgsel (id: <strong th:text="${inquiryId}">42</strong>) og vender tilbage indenfor 1 hverdag med et tilbud.</p>
+        <p>Hvis du har spørgsmål, send en email til <a href="mailto:salg@nap.dk">salg@nap.dk</a> eller ring på 70 12 34 56.</p>
+        <a th:href="@{/designer}" class="btn">Tilbage til designeren</a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
