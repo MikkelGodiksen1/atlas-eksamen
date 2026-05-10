@@ -4,8 +4,6 @@ import dk.nap.atlas.model.Logo;
 import dk.nap.atlas.model.Product;
 import dk.nap.atlas.model.ProductSpecification;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +25,6 @@ import java.util.Random;
  * Aktiv når {@code spring.profiles.active=local}, eller som fallback hvis OpenAI fejler.
  */
 @Component
-@Profile({"local", "default", "test"})
-@Primary
 public class StubImageGenerator implements ImageGenerator {
 
     private static final List<String> SAMPLE_BAGS = List.of(
