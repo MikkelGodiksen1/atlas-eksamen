@@ -54,9 +54,7 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .permitAll()
             )
-            .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/designer/upload-logo", "/designer/generate-mockup")
-            );
+            .csrf(csrf -> {});
         return http.build();
     }
 }

@@ -26,6 +26,7 @@
         <section class="inquiry-form-section">
             <h2>Dine oplysninger</h2>
             <form th:action="@{/inquiry/submit}" method="post" th:object="${inquiryForm}">
+                <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <input type="hidden" name="mockupId" th:value="${mockup?.id}">
                 <input type="hidden" name="productId" th:value="${productId}">
                 <input type="hidden" th:each="sid : ${specIds}" name="specIds" th:value="${sid}">

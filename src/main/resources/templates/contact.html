@@ -9,6 +9,7 @@
     <p class="lead">Hvis du foretrækker at få direkte rådgivning, så udfyld nedenstående og vi ringer dig op.</p>
 
     <form th:action="@{/contact/submit}" method="post" th:object="${inquiryForm}" class="contact-form">
+        <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         <label>Virksomhedsnavn
             <input type="text" th:field="*{companyName}" required>
             <span class="error" th:errors="*{companyName}"></span>

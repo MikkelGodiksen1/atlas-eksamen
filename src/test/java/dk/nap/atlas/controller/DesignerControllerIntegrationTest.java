@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -45,7 +46,7 @@ class DesignerControllerIntegrationTest {
         // Acceptér både 3xx redirect (happy path med disk-skrivning)
         // og 2xx (i CI hvor disk-skrivning kan fejle, falder vi tilbage til error-view)
         // — det vi tester er at request gennemgår validering uden 4xx/5xx
-        mvc().perform(multipart("/designer/upload-logo").file(file))
+        mvc().perform(multipart("/designer/upload-logo").file(file).with(csrf()))
             .andExpect(result -> {
                 int status = result.getResponse().getStatus();
                 if (status >= 400) {
@@ -59,7 +60,7 @@ class DesignerControllerIntegrationTest {
     void uploadLogo_rejectsExe() throws Exception {
         var file = new MockMultipartFile("logo", "evil.exe", "application/x-msdownload", "MZ".getBytes());
 
-        mvc().perform(multipart("/designer/upload-logo").file(file))
+        mvc().perform(multipart("/designer/upload-logo").file(file).with(csrf()))
             .andExpect(status().is3xxRedirection());
     }
 
